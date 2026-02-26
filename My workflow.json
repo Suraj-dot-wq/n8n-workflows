@@ -1,0 +1,273 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        -16
+      ],
+      "id": "7576ca4e-4cda-4b5e-859a-5ed17c5a31e6",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "getAllPeople"
+      },
+      "type": "n8n-nodes-base.n8nTrainingCustomerDatastore",
+      "typeVersion": 1,
+      "position": [
+        16,
+        -16
+      ],
+      "id": "efd81338-e675-43ef-b70e-b18a1dd43d80",
+      "name": "Customer Datastore (n8n training)"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appxc587SIXfUnnhY",
+          "mode": "list",
+          "cachedResultName": "customer",
+          "cachedResultUrl": "https://airtable.com/appxc587SIXfUnnhY"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl2v4ImnFT5Ei3no",
+          "mode": "list",
+          "cachedResultName": "dataset",
+          "cachedResultUrl": "https://airtable.com/appxc587SIXfUnnhY/tbl2v4ImnFT5Ei3no"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        224,
+        -16
+      ],
+      "id": "a03a15d5-46ef-4445-84f5-f50ee45b4823",
+      "name": "Search records",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "hZDusDbve9lsjIZR",
+          "name": "Airtable Personal Access Token account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5b04049c-f5b1-46dd-8ced-82cb6b307cd9",
+              "name": "Education",
+              "value": "={{ $json.Education }}",
+              "type": "string"
+            },
+            {
+              "id": "c987b9c6-bda0-49d6-93c5-0afdd3f55fcd",
+              "name": "JoiningYear",
+              "value": "={{ $json.JoiningYear }}",
+              "type": "number"
+            },
+            {
+              "id": "8b8c7fbf-e463-4e0a-9ffa-65f673a7daef",
+              "name": "Age",
+              "value": "={{ $json.Age }}",
+              "type": "number"
+            },
+            {
+              "id": "4146db1c-cc68-45d2-9b43-06beb45a0e66",
+              "name": "ExperienceInCurrentDomain",
+              "value": "={{ $json.ExperienceInCurrentDomain }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        432,
+        -16
+      ],
+      "id": "69281850-1c36-4a3f-9c56-b4e84c94c5d8",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4b83bf84-f47d-465a-a16c-4e8746f8e8b2",
+              "leftValue": "={{ $json.JoiningYear }}",
+              "rightValue": 2015,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        640,
+        -16
+      ],
+      "id": "0a4784ee-bbc0-4a57-a567-73a1a63d4674",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "55cb63d1-e915-4bd0-bf06-c2146cbf9aa9",
+              "name": "Education",
+              "value": "={{ $json.Education }}",
+              "type": "string"
+            },
+            {
+              "id": "6d474e66-aa77-49d1-85ec-f89e67fa10a4",
+              "name": "ExperienceInCurrentDomain",
+              "value": "={{ $('Edit Fields').item.json.ExperienceInCurrentDomain }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        -256
+      ],
+      "id": "a03e2dd8-7877-4466-add0-e14f73355884",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "55cb63d1-e915-4bd0-bf06-c2146cbf9aa9",
+              "name": "Education",
+              "value": "={{ $json.Education }}",
+              "type": "string"
+            },
+            {
+              "id": "6d474e66-aa77-49d1-85ec-f89e67fa10a4",
+              "name": "ExperienceInCurrentDomain",
+              "value": "={{ $('Edit Fields').item.json.ExperienceInCurrentDomain }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        928,
+        192
+      ],
+      "id": "924eaf30-8ee1-414d-8168-8789e80c165d",
+      "name": "Edit Fields2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Customer Datastore (n8n training)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Datastore (n8n training)": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d8487422-cfd8-4da0-b777-cbcac4371001",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0a6fbf62eb0a05d5f28bfdfc0b038a965d426ab5fe3ff5b583435a0a7b13d86a"
+  },
+  "id": "OvJ6R3m8sdvw7AIM",
+  "tags": []
+}

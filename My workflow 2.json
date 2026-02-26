@@ -1,0 +1,316 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -752,
+        -32
+      ],
+      "id": "be7c4cdf-8922-470e-bdd9-f94a0c82643e",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 1,
+        "filters": {
+          "labelIds": [
+            "UNREAD"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -576,
+        -192
+      ],
+      "id": "8746a612-48e4-487e-9ffb-154db8d2ba86",
+      "name": "Gmail all  mails",
+      "webhookId": "2e9ffac9-557c-4acb-be62-710732cbf6bb",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tnoIl4EHa0FOMuty",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": "={{ $json.threadId }}",
+        "simple": false,
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -352,
+        -224
+      ],
+      "id": "c7e54bef-b1ac-4cb8-93ac-80bb9480758b",
+      "name": "Get a message",
+      "webhookId": "2c7bc25b-9b06-4672-9eb2-12e34b8e9222",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tnoIl4EHa0FOMuty",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=I want you to draft an email reply in very professional way.\nsome thing to know i am right now not open for promotions and collaboration but i am open for meetings an project discussion as well.\n\nI want you to reply on this email : {{ $json.text }}\n\ni want you to draft the reply and give me the only body i don't want any subject line or anything just give me the body text.\n\nMy name is Suraj Ghadage i want you to put my name in reply as your regard. ",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -176,
+        -112
+      ],
+      "id": "a42d987c-655c-41b3-b551-85cdbc0dec99",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        112
+      ],
+      "id": "a2cb6be5-e0b3-417f-8d2e-afc62c18c3df",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "St0Hu47phri0v1mY",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appPrlxPLR8qRkWg5",
+          "mode": "list",
+          "cachedResultName": "Email reply",
+          "cachedResultUrl": "https://airtable.com/appPrlxPLR8qRkWg5"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl8033f2b8LarKPh",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appPrlxPLR8qRkWg5/tbl8033f2b8LarKPh"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Body Reply": "={{ $json.output }}",
+            "From Email": "={{ $('Get a message').item.json.to.value[0].address }}",
+            "Email Body": "={{ $('Get a message').item.json.text }}",
+            "Thread ID": "={{ $('Get a message').item.json.threadId }}",
+            "Sender Name": "={{ $('Get a message').item.json.replyTo.value[0].name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Sender Name",
+              "displayName": "Sender Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "From Email",
+              "displayName": "From Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email Body",
+              "displayName": "Email Body",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Body Reply",
+              "displayName": "Body Reply",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Thread ID",
+              "displayName": "Thread ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        176,
+        -112
+      ],
+      "id": "9c07abee-b55b-4597-84de-b60f49f22941",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "DhMvx6NgBCiud40s",
+          "name": "Airtable Personal Access Token account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $json.fields['Thread ID'] }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        384,
+        -112
+      ],
+      "id": "934743c9-ec5a-458f-8f62-ede2ae839ee4",
+      "name": "Mark a message as read",
+      "webhookId": "cf0ba601-64e6-4978-9a35-9183717fc099",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tnoIl4EHa0FOMuty",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Gmail all  mails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail all  mails": {
+      "main": [
+        [
+          {
+            "node": "Get a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a message": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        [
+          {
+            "node": "Mark a message as read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "89831ed4-4b38-4ecf-8706-4836a679ceb9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0a6fbf62eb0a05d5f28bfdfc0b038a965d426ab5fe3ff5b583435a0a7b13d86a"
+  },
+  "id": "kIMwTrLidxNFCkhl",
+  "tags": []
+}
